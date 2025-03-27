@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-l#)h#1=z8#qypwn^!wea+b0a59=*8m8(q@sjdt9_+u@-$f^uib"
+SECRET_KEY = "django-insecure-0gzzd&b5#)f2**v7dn@^-w&1=6%l1y=iynu3iks+rj)yp!85wu"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -116,9 +116,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# dev_2
+# 스태틱(static) 디렉터리
+# URL 상의 스택틱 폴더를 ,로컬(내컴퓨터)의 파일 폴더와 매칭 시키는 부분
+# http://127.0.0.1:8000/static/a.jpg
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# 미디어 파일 경로 설정
+import os
+
+# dev_2
+# http://127.0.0.1:8000/media/파일경로
+MEDIA_URL = "media/"  # ex) /media/photo1.png
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
