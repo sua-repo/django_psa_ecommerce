@@ -4,8 +4,13 @@
 <header class="bg-dark py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Shop in style</h1>
-            <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+            {% if request.path == '/about/' %}
+                <h1 class="display-4 fw-bolder">About us..</h1>
+                <p class="lead fw-normal text-white-50 mb-0">쇼핑몰 소개 페이지 입니다.</p>
+            {% else %}
+                <h1 class="display-4 fw-bolder">쇼핑몰</h1>
+                <p class="lead fw-normal text-white-50 mb-0">~~ 쇼핑몰입니다 ~~</p>
+            {% endif %}
         </div>
     </div>
 </header>
