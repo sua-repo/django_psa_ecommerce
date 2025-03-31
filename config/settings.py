@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",  # dev_5     # 쉼표(,)를 추가하여 통화형식(₩1,000,000)으로 변환하는 방법
     "store",  # dev_1
 ]
 
@@ -110,6 +111,10 @@ TIME_ZONE = "Asia/Seoul"  # dev_1
 
 USE_I18N = True
 
+# dev_5 (USE_TIMEZONE)
+# Timezone의 사용여부를 정한다.
+# False면 모든 datetime들을 표시하고 True면 template과 form에만 적용된다.
+# 즉 DB에 저장되는 정보도 한국 시간대로 사용하려면 이 부분을 False로 지정해줘야 한다.
 USE_TZ = True
 
 
@@ -135,5 +140,5 @@ import os
 
 # dev_2
 # http://127.0.0.1:8000/media/파일경로
-MEDIA_URL = "media/"  # ex) /media/photo1.png
+MEDIA_URL = "/media/"  # ex) /media/photo1.png
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

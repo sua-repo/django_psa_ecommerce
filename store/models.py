@@ -18,7 +18,7 @@ class Product(models.Model):
         default=0, max_digits=10, decimal_places=2
     )  # 99999999.99
     description = models.CharField(max_length=250, default="", blank=True, null=True)
-    image = models.ImageField(upload_to="upload/product")
+    image = models.ImageField(upload_to="upload/product/")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
