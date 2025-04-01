@@ -1,0 +1,21 @@
+<!-- dev_9 -->
+{% extends "layout/base.html" %}
+{% load humanize %}
+
+{% block head %}
+    {% include "accounts/head.html" %}
+{% endblock head %} 
+
+{% block navi %}
+    {% include "layout/navbar.html" %}
+{% endblock navi %}
+
+<!-- 로그인 템플릿 적용 -->
+{% block content %}
+    로그인 페이지
+{% endblock content %}
+<!-- 로그인 템플릿 적용 완료 -->
+
+{% block footer %}
+    {% include "layout/footer.html" %}
+{% endblock footer %}
