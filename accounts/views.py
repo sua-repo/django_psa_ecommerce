@@ -44,14 +44,27 @@ def logout_user(request):
     return redirect("/")
 
 
-# dev_10
+# dev_10    # 회원가입
 def register_user(request):
 
     form = RegisterUserForm()
 
     if request.method == "POST":
-        print(form)
-    else:
-        context = {"form": form}
+        if request.POST["password1"] == request.POST["password2"]:
+            form = RegisterUserForm(request.POST)  # 모델에 값을 넣음
 
-    return render(request, "accounts/register.html", context)
+            if form.is_valid():
+                form.save()  # 회원 DB 저장
+
+                # 회원가입 하자마자 로그인 시켜줌
+                username = form.cleaned_data.get("username")
+                raw_password = form.cleaned_data.get("password1")
+
+                user = authenticate(username=username, password=raw_password)
+                login(request, user)
+                return redirect("/")
+
+    else:
+        form = RegisterUserForm()
+
+    return render(request, "accounts/register.html", {"form": form})
