@@ -2,6 +2,9 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 
+# from .forms import RegisterUserForm   # 상대 경로
+from accounts.forms import RegisterUserForm  # 절대 경로
+
 
 # Create your views here.
 
@@ -39,3 +42,16 @@ def login_user(request):
 def logout_user(request):
     logout(request)  # session에 저장된 sessionid 삭제
     return redirect("/")
+
+
+# dev_10
+def register_user(request):
+
+    form = RegisterUserForm()
+
+    if request.method == "POST":
+        print(form)
+    else:
+        context = {"form": form}
+
+    return render(request, "accounts/register.html", context)
