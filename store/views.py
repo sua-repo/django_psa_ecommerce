@@ -29,3 +29,13 @@ def category_summary(request):
     categories = Category.objects.all()
 
     return render(request, "store/category_summary.html", {"categories": categories})
+
+
+# dev_14
+def category(request, category_id):
+    category = Category.objects.get(id=category_id)
+    products = Product.objects.filter(category=category)
+
+    context = {"category": category, "products": products}
+
+    return render(request, "store/category.html", context)

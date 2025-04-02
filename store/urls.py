@@ -13,4 +13,7 @@ urlpatterns = [
     path(
         "category_summary/", views.category_summary, name="category_summary"
     ),  # dev_14      카테고리 처리
+    path(
+        "category/<int:category_id>", views.category, name="category"
+    ),  # dev_8      어바웃 페이지 추가
 ]

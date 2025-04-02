@@ -25,10 +25,10 @@
     <section class="container justify-content-center">
         <div class="row">
             <center>
-                <div class="col-8 mt-5>
+                <div class="col-8 mt-5">
 
                     {% for category in categories %}
-                        <a href="{% url 'store:home' %}"><h2 class="text-center">{{ category.name }}</h2></a>
+                        <a href="{% url 'store:category' category.id %}"><h2 class="text-center">{{ category.name }}</h2></a>
                     {% endfor %}
                 
                 </div>
