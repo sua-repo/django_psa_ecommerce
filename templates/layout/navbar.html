@@ -43,14 +43,18 @@
                         <li>
                             <hr class="dropdown-divider" />
                         </li>
-                                
-                        <li>
-                            <a class="dropdown-item" href="#!">Popular Items</a>
-                        </li>
-                                
-                        <li>
-                            <a class="dropdown-item" href="#!">New Arrivals</a>
-                        </li>
+
+                        <!-- dev_14 -->
+                        {% if categories %}
+
+                            {% for category in categories %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'store:category' category.id %}!">{{category.name}}</a>
+                                </li>
+                            {% endfor %}
+                        
+                        {% endif %}   
+                        
                     </ul>
                 </li>
             </ul>

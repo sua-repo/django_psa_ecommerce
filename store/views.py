@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from store.models import Category, Product
 
 # Create your views here.
@@ -33,9 +33,17 @@ def category_summary(request):
 
 # dev_14
 def category(request, category_id):
-    category = Category.objects.get(id=category_id)
-    products = Product.objects.filter(category=category)
 
-    context = {"category": category, "products": products}
+    try:
+        category = Category.objects.get(id=category_id)  # 값이 없으면 에러
+        # category = Category.objects.filter(id=category_id)  # queryset 값이 없으면 빈 리스트
 
-    return render(request, "store/category.html", context)
+        products = Product.objects.filter(category=category)
+
+        context = {"category": category, "products": products}
+
+        return render(request, "store/category.html", context)
+
+    except:
+        messages.success(request, ("카테고리가 존재하지 않습니다."))
+        return redirect("store:home")
