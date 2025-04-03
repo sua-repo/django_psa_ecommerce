@@ -1,23 +1,20 @@
-<!-- dev_13 -->
+<!--dev_13-->
 {% extends "layout/base.html" %}
 {% load humanize %}
-
 {% block head %}
     {% include "layout/head.html" %}
-{% endblock head %} 
-
+{% endblock %}
 {% block navi %}
     {% include "layout/navbar.html" %}
 {% endblock navi %}
-
 {% block content %}
     <section class="py-5">
         <div class="container px-4 px-lg-5 my-5">
             <div class="row gx-4 gx-lg-5 align-items-center">
                 <div class="col-md-6">
                     <img class="card-img-top mb-5 mb-md-0"
-                    src="{{ product.image.url }}"
-                    alt="...">
+                         src="{{ product.image.url }}"
+                         alt="...">
                 </div>
                 <div class="col-md-6">
                     <div class="small mb-1">SKU: {{ product.id }}</div>
@@ -25,7 +22,7 @@
                     <div class="fs-5 mb-5">
                         {% if product.is_sale %}
                             <span class="text-decoration-line-through">{{ product.price|floatformat:0|intcomma }}원</span>
-                            <span>{{ product.sale_price|floatformat:0|intcomma }}원</span>
+                            <span>{{ product.price|floatformat:0|intcomma }}원</span>
                         {% else %}
                             {{ product.price|floatformat:0|intcomma }}원
                         {% endif %}
@@ -37,9 +34,14 @@
                                type="num"
                                value="1"
                                style="max-width: 3rem">
-                        <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                        <!--dev_15-->
+                        <button class="btn btn-outline-dark flex-shrink-0"
+                                type="button"
+                                value="{{ product.id }}"
+                                id="add-cart">
                             <i class="bi-cart-fill me-1"></i>
-                            Add to cart
+                            <!--dev_15-->
+                            Add to cart(장바구니 담기)
                         </button>
                     </div>
                     <br>
@@ -49,7 +51,29 @@
         </div>
     </section>
 {% endblock content %}
-
 {% block footer %}
     {% include "layout/footer.html" %}
 {% endblock footer %}
+<!--dev_15-->
+{% block script %}
+    <script>
+    $(document).on('click','#add-cart',function(e){
+        $.ajax({
+            type:"post",
+            url:"{% url 'cart:add_cart' %}",
+            data:{
+                product_id:$("#add-cart").val(),
+                product_qty: $("#inputQuantity").val(),
+                csrfmiddlewaretoken:'{{ csrf_token }}',
+                action:"post"
+            },
+            suceess:function(json){
+                console.log(json)                
+            },
+            error: function(e){
+                console.log(e)
+            }
+        });
+    });
+    </script>
+{% endblock %}
