@@ -1,9 +1,6 @@
-from django.contrib.sessions.models import Session  # 세션 모델을 가져오기 위해
-from django.contrib.sessions.backends.db import (
-    SessionStore,
-)  # 세션 데이터를 로드하기 위해
-
-from config import settings
+from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
 
 
 # dev_15
@@ -51,6 +48,7 @@ class Cart:  # 카트 클래스 생성
         self.session.modified = True  # 해당 세션을 DB에 저장
 
 
+# dev_16
 def decrypt_all_sessions(self):
     """현재 DB에 저장된 모든 세션을 복호화하여 출력"""
     sessions = Session.objects.all()  # DB에서 모든 세션 조회
