@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
+from store.models import Product
+from decimal import Decimal
 
 
 # dev_15
@@ -22,6 +24,23 @@ class Cart:  # 카트 클래스 생성
     # 리스트 컴프리 헨션
     def __len__(self):
         return sum(item["quantity"] for item in self.cart.values())
+
+    # dev_18
+    def __iter__(self):
+        product_ids = self.cart.keys()  # 상품 id 리스트
+
+        # 상품 id 리스트를 DB에서 상품 객체로 변환
+        # SELECT * FROM product WHERE id IN ("1","2")
+        products = Product.objects.filter(id__in=product_ids)
+
+        for product in products:
+            self.cart[str(product.id)]["product"] = product  # 상품 객체를 cart에 추가
+
+        for item in self.cart.values():
+            item["price"] = Decimal(item["price"])  # 가격을 Decimal로 변환
+            item["total_price"] = item["price"] * item["quantity"]
+
+            yield item  # 제너레이터 문법(yield문)을 사용하여 반복문을 종료하지 않고 다음 반복으로 넘어감
 
     def add(self, product, quantity=1, is_update=False):
         product_id = str(product.id)
@@ -46,6 +65,7 @@ class Cart:  # 카트 클래스 생성
     #                       "1",{"quantity": 1, "price": "10000.00"}
     #                      "2":{"quantity":1,"price":"5000.00"}
     #                  }
+
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True  # 해당 세션을 DB에 저장
