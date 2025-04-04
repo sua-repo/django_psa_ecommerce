@@ -64,6 +64,11 @@
                     <i class="bi-cart-fill me-1"></i>
                     Cart
                     <!--dev_16-->
+                    <!--dev_17-->
+                    <!-- {{ cart|length }}에서 cart는 cart/context_processors.py에서 호출한 cart() 함수의 리턴 값 -->
+                    <!-- cart() 함수에서 {"cart": Cart(request)}를 반환하므로, {{ cart|length }}는 Cart 객체의 __len__ 메서드를 호출하여 길이를 반환 -->
+                    <!-- 주의: Django 템플릿에서는 직접적인 함수 호출이 금지되어있고 값으로만 사용 가능해서  괄호를 쓰면 안 됨 -->
+                    <!-- cart라는 변수를 함수로 인식하지 않고 context_processor에서 리턴한 값 자체를 변수로 인식 -->
                     <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span>
                 </button>
             </form>

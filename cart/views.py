@@ -29,8 +29,11 @@ def add_cart(request):
         # 세션에 저장
         cart.add(product, product_qty)
 
-        # Get Cart Quantity
+        # 카트 전체 개수 가져 오기
         cart_qty = cart.__len__()
         response = JsonResponse({"qty": cart_qty})
+
+        # 세션확인 테스트
+        cart.decrypt_all_sessions()
 
         return response
