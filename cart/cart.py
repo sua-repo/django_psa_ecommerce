@@ -28,6 +28,7 @@ class Cart:  # 카트 클래스 생성
     def add(self, product, quantity=1, is_update=False):
         product_id = str(product.id)
 
+        # self.sesstion =request.sesssion = { 'cart':' {}  }
         # self.cart = {
         #           "1" : {"quantity" : 1, "price" : "3000.00"},
         #           "2" : {"quantity" : 7, "price" : "5000.00"}
