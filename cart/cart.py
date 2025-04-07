@@ -1,8 +1,10 @@
 from django.conf import settings
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
-from store.models import Product
 from decimal import Decimal
+
+# dev_18
+from store.models import Product
 
 
 # dev_15
@@ -27,20 +29,23 @@ class Cart:  # 카트 클래스 생성
 
     # dev_18
     def __iter__(self):
-        product_ids = self.cart.keys()  # 상품 id 리스트
+        product_ids = self.cart.keys()  # ("1","2")
 
-        # 상품 id 리스트를 DB에서 상품 객체로 변환
-        # SELECT * FROM product WHERE id IN ("1","2")
+        # select * from product where id in ("1","2")
         products = Product.objects.filter(id__in=product_ids)
 
+        # self.cart = {
+        #          "1":{"quantity":7,"price":3000.00,"product": <Product: 상품1>, "total_price":21000 }
+        #          "2":{"quantity":1,"price":5000.00,"product": <Product: 상품2> , "total_price":50000 }
+        #        }
         for product in products:
-            self.cart[str(product.id)]["product"] = product  # 상품 객체를 cart에 추가
+            self.cart[str(product.id)]["product"] = product
 
         for item in self.cart.values():
-            item["price"] = Decimal(item["price"])  # 가격을 Decimal로 변환
+            item["price"] = Decimal(item["price"])
             item["total_price"] = item["price"] * item["quantity"]
 
-            yield item  # 제너레이터 문법(yield문)을 사용하여 반복문을 종료하지 않고 다음 반복으로 넘어감
+            yield item  # 제너레이터 문법 return
 
     def add(self, product, quantity=1, is_update=False):
         product_id = str(product.id)
@@ -65,10 +70,17 @@ class Cart:  # 카트 클래스 생성
     #                       "1",{"quantity": 1, "price": "10000.00"}
     #                      "2":{"quantity":1,"price":"5000.00"}
     #                  }
-
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True  # 해당 세션을 DB에 저장
+
+    # dev_19
+    def remove(self, product):
+        product_id = str(product.id)
+
+        if product_id in self.cart:
+            del self.cart[product_id]
+            self.save()
 
     def decrypt_all_sessions(self):
         """현재 DB에 저장된 모든 세션을 복호화하여 출력"""
