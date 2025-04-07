@@ -45,7 +45,14 @@ def summary_cart(request):
     # 카트객체 받아 오기
     cart = Cart(request)
 
-    return render(request, "cart/summary.html", {"cart": cart})
+    return render(
+        request,
+        "cart/summary.html",
+        {
+            "cart": cart,
+            "totals": cart.get_product_total,
+        },  # dev_21     # 함수 호출 아님 주의
+    )
 
 
 # dev_19
