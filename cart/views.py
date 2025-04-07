@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from cart.cart import Cart
 from store.models import Product
 from django.http import JsonResponse
-
+from django.contrib import messages
 
 # Create your views here.
 
@@ -36,6 +36,10 @@ def add_cart(request):
         # 세션확인 테스트
         cart.decrypt_all_sessions()
 
+        # dev_22
+        messages.success(request, "장바구니에 해당 상품이 추가 되었습니다.")
+        # messages.error(request, "장바구니에 해당 상품이 추가 되었습니다.")
+
         return response
 
 
@@ -68,6 +72,9 @@ def delete_cart(request):
 
         cart.remove(product)
 
+        # dev_22
+        messages.success(request, "장바구니에 해당 상품이 삭제 되었습니다.")
+
         return JsonResponse({"삭제_상품": product_id})
 
 
@@ -85,4 +92,6 @@ def update_cart(request):
         # 카트 추가가 아닌 업데이트
         cart.add(product, product_qty, True)
 
+        # dev_22
+        messages.success(request, "장바구니에 해당 상품이 업데이트 되었습니다.")
         return JsonResponse({"상품 업데이트": product_id})
