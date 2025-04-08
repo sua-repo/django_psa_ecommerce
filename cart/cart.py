@@ -4,6 +4,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from decimal import Decimal
 
 # dev_18
+from accounts.models import User
 from store.models import Product
 
 
@@ -15,6 +16,10 @@ class Cart:  # 카트 클래스 생성
 
         self.session = request.session  # session 객체를 Cart 객체에 변수로 저장
         cart = self.session.get(settings.CART_SESSION_ID)
+
+        # dev_23
+        # 로그인이 되어있다면 로그인 유저에 대한 정보를 빼내기 위해
+        self.request = request
 
         if not cart:
             # session에 cart 객체가 없으면 session 객체에 cart 를 만듦
@@ -78,6 +83,19 @@ class Cart:  # 카트 클래스 생성
 
         self.save()
 
+    # dev_23
+    def cart_to_db(self):
+        # 로그인 되어있을 때 메모리에 있는 카트(딕셔너리 객체)를 old_cart에 str 형태로 저장
+        if self.request.user.is_authenticated:  # 로그인 되어있는 유저라면
+            current_user = User.objects.filter(id=self.request.user.id)
+            # Convert {'3':1} to {"3":1}
+
+            carty = str(self.cart)
+            carty = carty.replace("'", '"')
+            current_user.update(
+                old_cart=str(carty)
+            )  # old_cart에 장바구니 str 형태로 저장
+
     #     self.sesstion =request.sesssion = { 'cart':' {}(self.cart)  }
     #     self.cart = {
     #                       "1",{"quantity": 1, "price": "10000.00"}
@@ -86,6 +104,7 @@ class Cart:  # 카트 클래스 생성
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True  # 해당 세션을 DB에 저장
+        self.cart_to_db()  # dev_23
 
     # dev_19
     def remove(self, product):

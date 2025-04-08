@@ -1,9 +1,13 @@
+import json
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 
 # from .forms import RegisterUserForm   # 상대 경로
-from accounts.forms import RegisterUserForm  # 절대 경로
+from accounts.forms import RegisterUserForm
+from accounts.models import User
+from cart.cart import Cart
+from store.models import Product  # 절대 경로
 
 
 # Create your views here.
@@ -24,7 +28,33 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-            login(request, user)
+            login(request, user)  # session key 생성 및 세션 키 DB 저장
+
+            # dev_23
+            current_user = User.objects.get(id=request.user.id)
+            saved_cart = current_user.old_cart  # DB에 저장된 장바구니 정보 가져오기
+
+            # add
+
+            cart = Cart(request)
+
+            if len(cart) > 0:
+                cart.convert_to_db()
+
+            if saved_cart:
+                converted_cart = json.loads(saved_cart)
+                # add
+                cart = Cart(request)
+
+                # {"1": {"quantity" : 5, "price" : "10000"}}
+                # loop
+                for product_id, data in converted_cart.items():
+                    quantity = data["quantity"]
+                    print("상품 ID :", product_id)  # 1
+                    print("수량 :", quantity)  # 5
+                    product = Product.objects.get(id=product_id)
+                    cart.add(product, quantity)
+
             messages.success(request, "로그인이 되었습니다.")
             return redirect("/")
 
