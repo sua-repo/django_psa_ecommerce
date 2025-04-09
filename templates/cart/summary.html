@@ -92,11 +92,17 @@
             <h3 class="text-center">Total : {{ totals|floatformat:0|intcomma }}원</h3>
 
             <!-- dev_24 -->
-            <form method="post" action="{% url 'orders:create_orders' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success text-center">주문</button>
-            </form>
-        
+            {% comment "" %}            
+                <form method="post" action="{% url 'orders:create_orders' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success text-center">주문</button>
+                </form>
+            {% endcomment %}
+
+            <!-- dev_25 -->
+            <a href="{% url 'orders:create_orders' %}">
+                <button type="button" class="btn btn-sucess text-center">주문</button>
+            </a>
         
         {% else %}
             <h1>장바구니에 물품이 없습니다.</h1>

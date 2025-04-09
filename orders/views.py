@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-
 from cart.cart import Cart
 from orders.models import Order, OrderItem
 from store.models import Product
+
+# dev_25
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 
 # dev_24
+# dev_25
+@login_required(login_url="accounts:login_user")
 def create_orders(request):
 
     if request.POST:
@@ -25,6 +29,7 @@ def create_orders(request):
             # OrderItem(주문 상품) 생성 및 저장
             order_id = create_order.pk  # 주문 ID
 
+            # {'quantity': 1, 'price': Decimal('10000.00'), 'product': <Product: 너를위한-장고>, 'total_price': Decimal('10000.00')}
             for item in cart:
                 print(item)
 
@@ -52,4 +57,5 @@ def create_orders(request):
 
     else:
         messages.success(request, "잘못된 접근입니다.")
-        return redirect("/")
+        # dev_25
+        return render(request, "orders/create.html")

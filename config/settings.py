@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "accounts",  # dev_9
     "cart",  # dev_15
     "orders",  # dev_24
+    "payment",  # dev_25
 ]
 
 MIDDLEWARE = [
@@ -148,7 +149,7 @@ import os
 
 # dev_2
 # http://127.0.0.1:8000/media/파일경로
-MEDIA_URL = "/media/"  # ex) /media/photo1.png
+MEDIA_URL = "media/"  # ex) /media/photo1.png
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
