@@ -56,6 +56,6 @@ def create_orders(request):
             return redirect("/")
 
     else:
-        messages.success(request, "잘못된 접근입니다.")
         # dev_25
+        # messages.success(request, "잘못된 접근 입니다.")
         return render(request, "orders/create.html")

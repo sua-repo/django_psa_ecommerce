@@ -325,16 +325,16 @@
             //data-pg="html5_inicis.INIpayTest"
             //data-pay="card"
             let pg = $(this).data('pg')
-            let payMethod = $('this').data('pay')
+            let payMethod = $(this).data('pay')
             let priceTotals = {{ cart.get_product_total }} //cart 에 있는 함수 호출
 
-            let impCode = 'imp43216235' //상점번호
+            let impCode = 'imp60282883' //상점번호
             
-            IMP.init(impCode); //고객사 식별코드를 통해 결재 모듈 초기화
-            IMP.request_pay(
+            IMP.init(impCode); //고객사 식별코드를 통해 결제 모듈 초기화
+            IMP.request_pay(    // 결제 모듈 팝업 띄워줌
             {   
                 pg:pg,
-                pay_method : payMethod,
+                pay_method: payMethod,
                 //merchant_uid: `payment-${crypto.randomUUID()}`, // 주문번호 생성(생략시 포트원에서 자동생성)
                 name: "장바구니 주문", //결제창에 노출될 상품명
                 amount: 100,//테스트를 위하여 100원으로 설정
@@ -348,51 +348,45 @@
                 // 결제 종료 시 호출되는 콜백 함수
                 // response.imp_uid 값으로 결제 단건조회 API를 호출하여 결제 결과를 확인하고,
                 // 결제 결과를 처리하는 로직을 작성합니다.
-                // 결재 성공시의 로직
+                // 결제 성공시의 로직
                 if(response.success){
                     console.log(response)
-                    // alert("결제성공")
-
+                    //alert("결제 성공")
+                    
                     // 결제 성공 시 로직
-                    // 1. 주문 정보 저장을 위해 ajax 요청
-                    // 2. 서버에서 결제금액과 주문 금액(세션에 저장되어있는)이 일치하는지 확인
-                    // 3. 일치하면 주문 정보 및 결제 정보 저장
-
-                    $ajax({
-                        type : 'POST',
-                        url : "{% url 'payment:payment_process' %}",
-                        data : {
+                    //1.주문 정보 저장을 위해 ajax 요청
+                    //2.서버에서 결제금액과 주문금액(세션에 저장되어있는)이 일치하는지 확인
+                    //3.일치하면 주문 정보 및 결제정보 저장
+                    $.ajax({
+                        type:'POST',
+                        url:"{% url 'payment:payment_process'  %}",
+                        data:{
                             imp_uid : response.imp_uid,
                             paid_amount : response.paid_amount,
-                            csrfmiddlewaretoken : '{{csrf_token}}',
-                            action : 'post',
+                            csrfmiddlewaretoken:'{{csrf_token}}',
+                            action :'post'
                         },
-
-                        success : function(response) {
+                        success: function(response){
                             console.log(response)
-
-                            if (response == "SUCCESS") {
-                                alert("결제가 완료되었습니다.")
-                                location.href = "/"     // 자바 스크립트에서의 리다이렉트
-                            }
-                            else {
-                                alert("결제 실패하였습니다.")
+                            if(response == "SUCCESS"){
+                                alert("결제가 완료되었습니다")
+                                location.href = "/" // 자바 스크립트에서의 리다이렉트
+                            }else{
+                                alert('결제에 실패하였습니다');
                                 location.reload()
                             }
                         },
-
-                        error : function(e) {
-                            alert("결제에 실패하였습니다.")
+                        error: function(e){
+                            alert("결제에 실패하였습니다")
                             console.log(e)
                         }
-                    })
+                    });                  
 
                 }else{
                     alert("결제실패")
                 }
 
             });
-
         });
     </script>
 {% endblock %}
