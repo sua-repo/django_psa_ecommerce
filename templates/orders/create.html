@@ -14,7 +14,7 @@
         <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">주문페이지</h1>
+                    <h1 class="display-4 fw-bolder">주문페이지(CheckOut page)</h1>
                     <p class="lead fw-normal text-white-50 mb-0">주문을 해주세요. !!~~</p>
                 </div>
             </div>
@@ -25,7 +25,10 @@
             <div class="container py-5">
                 <h1 class="mb-4">Billing details</h1>
                 <!--dev_24-->
-                <form method="post">
+                <!--dev_26_2-->
+                <form id="payment-form"
+                      method="post"
+                      action="{% url 'payment:payment_process' %}">
                     {% csrf_token %}
                     {% include "layout/form_errors.html" %}
                     <div class="row g-5">
@@ -307,10 +310,20 @@
                                         data-pg="html5_inicis.INIpayTest"
                                         data-pay="card"
                                         class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary request-pay"
-                                        value="Place Order">Place Order</button>
+                                        value="KG 이니시스">KG 이니시스</button>
+                                <!--dev_26_2 카카오페이-->
+                                <button type="button"
+                                        id="kakaoPay"
+                                        data-pg="kakaopay"
+                                        data-pay="card"
+                                        class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary request-pay"
+                                        value="카카오페이">카카오페이</button>
                             </div>
                         </div>
                     </div>
+                    <!--dev_26_2-->
+                    <input type="hidden" name="imp_uid" id="imp_uid">
+                    <input type="hidden" name="paid_amount" id="paid_amount">
                 </form>
             </div>
         </div>
@@ -322,6 +335,9 @@
 {% block script %}
     <script>
         $(document).on('click','.request-pay',function(e){
+            //dev_26_2
+            e.preventDefault(); // 기본 동작 막기 (페이지 이동 방지)
+
             //data-pg="html5_inicis.INIpayTest"
             //data-pay="card"
             let pg = $(this).data('pg')
@@ -331,7 +347,7 @@
             let impCode = 'imp60282883' //상점번호
             
             IMP.init(impCode); //고객사 식별코드를 통해 결제 모듈 초기화
-            IMP.request_pay(    // 결제 모듈 팝업 띄워줌
+            IMP.request_pay(  //결제모듈 팝업 띄워줌
             {   
                 pg:pg,
                 pay_method: payMethod,
@@ -351,8 +367,25 @@
                 // 결제 성공시의 로직
                 if(response.success){
                     console.log(response)
-                    //alert("결제 성공")
+                    //alert("결제성공")
                     
+                    $("#imp_uid").val(response.imp_uid);
+                    $("#paid_amount").val(response.paid_amount);
+                    //폼전송 <form id="payment-form"
+                    $("#payment-form").submit()
+                                      
+
+
+                }else{
+                    alert("결제실패")
+                }
+
+            });
+        });
+    </script>
+{% endblock %}
+
+                    {% comment %}
                     // 결제 성공 시 로직
                     //1.주문 정보 저장을 위해 ajax 요청
                     //2.서버에서 결제금액과 주문금액(세션에 저장되어있는)이 일치하는지 확인
@@ -380,13 +413,5 @@
                             alert("결제에 실패하였습니다")
                             console.log(e)
                         }
-                    });                  
-
-                }else{
-                    alert("결제실패")
-                }
-
-            });
-        });
-    </script>
-{% endblock %}
+                    });     
+                    {% endcomment %}             

@@ -10,6 +10,8 @@ from payment.models import Payment
 from store.models import Product
 from django.http import HttpResponse
 
+from orders.forms import ShippingForm
+
 
 # Create your views here.
 # dev_26
@@ -48,6 +50,16 @@ def payment_process(request):
 
                 create_order_item.save()
 
+            # dev_26_2
+            # 배송지 정보 저장
+            form = ShippingForm(request.POST)
+
+            if form.is_valid():
+                shipping = form.save(commit=False)
+                shipping.user = request.user
+                shipping.order = create_order
+                shipping.save()
+
             # 결제 정보 저장
             create_payment = Payment(order=create_order)
             create_payment.imp_uid = request.POST["imp_uid"]
@@ -60,7 +72,8 @@ def payment_process(request):
                 cart.remove(product)
 
             messages.success(request, "결제가 완료 되었습니다")
-            return HttpResponse("SUCCESS")
+            # dev_26_2
+            return redirect("/")
 
         else:
             messages.success(request, "결제금액이 맞지 않아 취소 되었습니다")
