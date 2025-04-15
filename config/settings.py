@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.google', #구글로그인 구현시 추가
     "allauth.socialaccount.providers.kakao",  # 카카오로그인 구현시 추가
     #'allauth.socialaccount.providers.naver', # 네이버 로그인 구현시 추가
+    "rest_framework",  # dev_28 : DRF
+    "api",  # dev_28
 ]
 
 MIDDLEWARE = [
