@@ -19,7 +19,7 @@ class Product(models.Model):
         decimal_places=2, default=Decimal("0"), max_digits=10
     )  # 99999999.99
     description = models.CharField(max_length=250, default="", blank=True, null=True)
-    image = models.ImageField(upload_to="upload/product/")
+    image = models.ImageField(upload_to="upload/product/", blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     is_sale = models.BooleanField(default=False)  # dev_6
     sale_price = models.IntegerField(default=0)  # dev_6

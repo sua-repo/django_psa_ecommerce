@@ -3,11 +3,11 @@ from rest_framework import serializers
 from store.models import Category, Product
 
 # Serilaizer 객체의 주요 기능
-# serialization
-# deserialiaztion
-# validation
-# request / response 데이터 핸들링 ( to_internal_value() / to_representation() )
-# nested serialization
+# 1) serialization
+# 2) deserialiaztion
+# 3) validation
+# 4) request / response 데이터 핸들링 ( to_internal_value() / to_representation() )
+# 5) nested serialization
 
 
 # # dev_29
@@ -26,8 +26,9 @@ from store.models import Category, Product
 #     sale_price = serializers.IntegerField()
 
 
+# 객체를 딕셔너리로 만드는 게 목적
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        # fields = "__all__"
-        fields = ["id", "name", "category"]
+        fields = "__all__"
+        # fields = ["id", "name", "category"]
