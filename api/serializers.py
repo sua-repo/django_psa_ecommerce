@@ -32,3 +32,48 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = "__all__"
         # fields = ["id", "name", "category"]
+
+    # dev_31
+    # 가격은 0이상 100,000이하만
+    def validate_price(self, value):
+        if value < 0:
+            raise serializers.ValidationError("가격은 0이상이어야 합니다.")
+
+        if value > 100000:
+            raise serializers.ValidationError("가격은 10만원 이하여야 합니다.")
+
+        return value
+
+    # 이름은 3글자 이상 100글자 이하만
+    def validate_name(self, value):
+        if len(value.strip()) < 3:
+            raise serializers.ValidationError("이름은 세 글자 이상이어야 합니다.")
+
+        if len(value.strip()) > 100:
+            raise serializers.ValidationError("이름은 100글자 이하여야 합니다.")
+
+        return value
+
+    # 검증
+    # https://www.django-rest-framework.org/api-guide/serializers/#validation
+    def validate(self, data):
+        is_sale = data.get("is_sale")
+        sale_price = data.get("sale_price")
+
+        if is_sale:
+            # 세일 중이면 sale_price는 반드시 필요하고 0보다 커야 함
+            if sale_price is None or sale_price <= 0:
+                raise serializers.ValidationError(
+                    {"sale_price": "sale_price는 0보다 커야 합니다."}
+                )
+
+        else:
+            # 세일이 아니면 sale_price는 아예 없어야 함 (자동 무시하거나 경고)
+            if sale_price and sale_price > 0:
+                raise serializers.ValidationError(
+                    {
+                        "sale_price": "is_sale이 False이면 sale_price를 지정할 수 없습니다."
+                    }
+                )
+
+        return data
