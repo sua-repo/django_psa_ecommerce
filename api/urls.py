@@ -5,7 +5,7 @@ from django.urls import path
 # from api.views import hello_world, hello_world_drf, hello_world_json
 
 # dev_29
-from .views import base_views, product_views
+from .views import base_views, product_views, category_views
 
 app_name = "api"
 
@@ -22,4 +22,5 @@ urlpatterns = [
     # DELETE    products/{id}   delete product
     path("products/", product_views.products_api),  # dev_29 : product_views.py
     path("product/<int:pk>/", product_views.product_api),  # dev_30
+    path("categories/", category_views.categories_api),  # dev_30
 ]
