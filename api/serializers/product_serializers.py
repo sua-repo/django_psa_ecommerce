@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.serializers.category_serializers import CategorySimpleSerializer
+
 from store.models import Category, Product
 
 # dev_34
@@ -14,6 +14,8 @@ class ProductSimpleSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    # dev_34 : 순환 참조 방지(lazy loading)
+    from api.serializers.category_serializers import CategorySimpleSerializer
 
     category = CategorySimpleSerializer()  # nested serializer
 
