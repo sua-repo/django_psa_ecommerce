@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from api.serializers.product_serializers import ProductSerializer
 from store.models import Product, Category
-from api.serializers import ProductSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
