@@ -6,9 +6,14 @@ from store.models import Category, Product
 # 1) serialization
 # 2) deserialiaztion
 # 3) validation
-# 4) request / response 데이터 핸들링 ( to_internal_value() / to_representation() )
+# 4) request / response 데이터 핸들링 ( to_internal_value() / to_representation() ) => create(), update()  오버라이딩
 # 5) nested serialization
 
+# dev_33
+# 주의할 점
+# 1) depth는 읽기 전용 출력
+# 2) POST, PUT 요청에서 중첩된 객체를 직접 생성하거나 수정 불가
+# 만약 쓰기도 원한다면 category_id와 같은 별도 필드와 create() 오버라이드가 필요
 
 # # dev_29
 # class ProductSerializer(serializers.Serializer):
@@ -26,10 +31,21 @@ from store.models import Category, Product
 #     sale_price = serializers.IntegerField()
 
 
+# dev_32
+class CategorySerializer(serializers.ModelSerializer):
+    # dev_32 : 역방향 참조
+    # products = ProductSerializer(many=True, read_only=True)  # related_name=products
+
+    class Meta:
+        model = Category
+        fields = "__all__"
+
+
 # 객체를 딕셔너리로 만드는 게 목적
 class ProductSerializer(serializers.ModelSerializer):
 
-    # category = CategorySerializer(read_only=True)  # dev_32
+    category = CategorySerializer(read_only=True)  # dev_32
+    # category = CategorySerializer()  # dev_33 : write 가능
 
     class Meta:
         model = Product
@@ -41,6 +57,31 @@ class ProductSerializer(serializers.ModelSerializer):
         # 단점 : depth가 깊어지면 속도에 문제가 생김
         # 기본적으로 read only
         # depth = 1
+
+    # {
+    #     "name": "오렌지",
+    #     "price": "12000.00",
+    #     "description": "파이썬 책입니다.",
+    #     "image": null,
+    #     "is_sale": false,
+    #     "sale_price": 0
+    # }
+
+    # "category": {
+    #     "name": "과일"
+    # }
+
+    # def create(self, validated_data):
+    #     category_data = validated_data.pop("category")
+
+    #     # 카테고리 저장 / 조회
+    #     category, _ = Category.objects.get_or_create(**category_data)
+    #     product = Product.objects.create(**validated_data, category=category)
+
+    #     return product
+
+    def create(self, validated_data):
+        return Product.objects.create(**validated_data)
 
 
 #     # dev_31
@@ -87,13 +128,3 @@ class ProductSerializer(serializers.ModelSerializer):
 #                 )
 
 #         return data
-
-
-# dev_32
-class CategorySerializer(serializers.ModelSerializer):
-    # dev_32 : 역방향 참조
-    # products = ProductSerializer(many=True, read_only=True)  # related_name=products
-
-    class Meta:
-        model = Category
-        fields = "__all__"
