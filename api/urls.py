@@ -22,5 +22,6 @@ urlpatterns = [
     # DELETE    products/{id}   delete product
     path("products/", product_views.products_api),  # dev_29 : product_views.py
     path("product/<int:pk>/", product_views.product_api),  # dev_30
-    path("categories/", category_views.categories_api),  # dev_30
+    # path("categories/", category_views.categories_api),  # dev_30
+    path("categories/", category_views.CategoriesAPI.as_view()),  # dev_35
 ]

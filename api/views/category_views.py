@@ -1,15 +1,20 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from api.serializers.category_serializers import CategorySerializer
+from api.serializers.category_serializers import (
+    CategorySerializer,
+    CategorySimpleSerializer,
+)
 from store.models import Category, Product
 from rest_framework import status
+from rest_framework.views import APIView
 
 # http://127.0.0.1:8000/api/categories/
 # 방식  url         기능
 # GET   products/   list
 
 
+# dev_32
 @api_view(["GET"])
 def categories_api(request):
 
@@ -17,3 +22,24 @@ def categories_api(request):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
+
+
+# dev_35
+class CategoriesAPI(APIView):
+    def get(self, request):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = CategorySimpleSerializer(data=request.data)
+        serializer.is_valid()
+        serializer.save()
+
+        return Response(serializer.data)
+
+    def put(self, request):
+        pass
+
+    def delete(self, request):
+        pass

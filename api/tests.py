@@ -13,20 +13,41 @@ class Rectangle:
         self.area = width * height
 
 
+def add(num1, num2):
+    return num1 + num2
+
+
+def sub(num1, num2):
+    return num1 - num2
+
+
 class ObjectAPITest(TestCase):
     def setUp(self):
         pass
 
-    # 사각형 rect 객체를 직렬화 (Serialization)
-    def test_serialization(self):
-        rect = Rectangle(10, 20)
+    def test_path(self):
 
-        # 직렬화
-        with open("rect.data", "wb") as f:
-            pickle.dump(rect, f)
+        dict = {
+            "add": add,
+            "sub": sub,
+        }
 
-        # 역직렬화
-        with open("rect.data", "rb") as f:
-            r = pickle.load(f)
+        url = "add"
+        print(dict[url](1, 2))
 
-        print(r.width, r.height)
+        url = "sub"
+        print(dict[url](1, 2))
+
+    # # 사각형 rect 객체를 직렬화 (Serialization)
+    # def test_serialization(self):
+    #     rect = Rectangle(10, 20)
+
+    #     # 직렬화
+    #     with open("rect.data", "wb") as f:
+    #         pickle.dump(rect, f)
+
+    #     # 역직렬화
+    #     with open("rect.data", "rb") as f:
+    #         r = pickle.load(f)
+
+    #     print(r.width, r.height)
