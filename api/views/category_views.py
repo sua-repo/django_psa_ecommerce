@@ -11,6 +11,9 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 
+
+from rest_framework.viewsets import ModelViewSet
+
 from store.models import Category
 
 
@@ -168,7 +171,7 @@ class CategoryMixins(
 # IsAuthenticated : 로그인한 사용자만 접근 가능
 # IsAdminUser : is_staff=True인 관리자만 접근 가능
 # IsAuthenticatedOrReadOnly : 로그인 한 사용자만 수정 가능, 비로그인 사용자는 읽기만 가능
-class CategoriesGeneric(ListCreateAPIView):
+class CategoriesGenericView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySimpleSerializer
     # permission_classes = [IsAuthenticated]
@@ -192,7 +195,7 @@ class CategoriesGeneric(ListCreateAPIView):
         return response
 
 
-class CategoryGeneric(RetrieveUpdateDestroyAPIView):
+class CategoryGenericView(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySimpleSerializer
 
@@ -248,3 +251,8 @@ class CategoryGeneric(RetrieveUpdateDestroyAPIView):
             {"message": "카테고리가 삭제 되었습니다."},
             status=status.HTTP_204_NO_CONTENT,
         )
+
+
+class CategoryViewSet(ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySimpleSerializer
